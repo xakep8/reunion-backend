@@ -1,5 +1,5 @@
 "use strict";
-const { Model,Op } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Todo.belongsTo(models.User,{
-        foreignKey:'userId'
+      Todo.belongsTo(models.User, {
+        foreignKey: 'userId'
       })
       // define association here
     }
 
-    static addTodo({ title, dueDate,userId }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false, userId });
+    static addTodo({ title,description, startDate, endDate, userId }) {
+      return this.create({ title: title,description: description, startDate: startDate, endDate: endDate, completed: false, userId });
     }
 
     static getTodos(userId) {
@@ -28,37 +28,40 @@ module.exports = (sequelize, DataTypes) => {
       );
     }
 
-    static async remove(id,userId) {
-      this.destroy({ where: {
+    static async remove(id, userId) {
+      this.destroy({
+        where: {
           id,
           userId,
         },
       });
     }
 
-    static async completedItems(userId){
+    static async completedItems(userId) {
       return this.findAll({
-        where:{
-          [Op.and]:[{
+        where: {
+          [Op.and]: [{
             userId,
-            completed:true,
+            completed: true,
           }]
         },
       });
     }
 
-    static async deleteAll(){
-      this.destroy({where:{}});
+    static async deleteAll() {
+      this.destroy({ where: {} });
     }
 
     setCompletionStatus(state) {
-      return this.update({completed:state});
+      return this.update({ completed: state });
     }
   }
   Todo.init(
     {
       title: DataTypes.STRING,
-      dueDate: DataTypes.DATEONLY,
+      description: DataTypes.STRING,
+      startDate: DataTypes.DATEONLY,
+      endDate: DataTypes.DATEONLY,
       completed: DataTypes.BOOLEAN,
     },
     {

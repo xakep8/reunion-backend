@@ -17,7 +17,17 @@ module.exports = {
           len:5,
         }
       },
-      dueDate: {
+      description: {
+        type: Sequelize.STRING,
+      },
+      startDate: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+        validate: {
+          notNull:true,
+        }
+      },
+      endDate: {
         type: Sequelize.DATEONLY,
         allowNull: false,
         validate: {
