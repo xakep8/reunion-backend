@@ -89,7 +89,7 @@ app.get("/tasks", verifyToken, async function (request, response) {
   const acc = await User.findByPk(request.userId);
   const userName = acc.name;
   const todos = await Todo.getTodos(request.userId);
-  const pending=[]; const done=[];
+  const pending = []; const done = [];
   todos.forEach(todo => {
     if (todo.completed) {
       done.push(todo.id);
@@ -204,6 +204,25 @@ app.delete("/tasks/:id", verifyToken, async function (request, response) {
   }
   catch (error) {
     return response.status(422).json(error);
+  }
+});
+
+app.post("/verify", async (req, res) => {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).send('Token is required for authentication');
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await User.findByPk(decoded.id);
+
+    if (!user) {
+      return res.status(401).send('Invalid token: User does not exist');
+    }
+  } catch (error) {
+    return res.status(401).send('Invalid or expired token');
   }
 });
 
