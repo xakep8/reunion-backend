@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -e js,ejs",
-    "start:prod": "node index.js",
+    "start:prod": "NODE_ENV=production npx sequelize-cli db:drop && NODE_ENV=production npx sequelize-cli db:create && NODE_ENV=production npx sequelize-cli db:migrate && node index.js",
     "db:create:test": "NODE_ENV=test npx sequelize-cli db:create",
     "pretest": "NODE_ENV=test npx sequelize-cli db:drop && NODE_ENV=test npx sequelize-cli db:create",
     "test": "NODE_ENV=test jest --detectOpenHandles",
